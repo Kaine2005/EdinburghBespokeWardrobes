@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://edinburghbespokewardrobes.com/sitemap.xml
