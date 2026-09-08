@@ -79,4 +79,38 @@
             }
         });
     });
+
+    // ─── Before/after compare slider ───
+    document.querySelectorAll('.compare-viewport').forEach(function (vp) {
+        var dragging = false;
+
+        var setPos = function (pct) {
+            pct = Math.max(1, Math.min(99, pct));
+            vp.style.setProperty('--pos', pct + '%');
+            vp.setAttribute('aria-valuenow', Math.round(pct));
+        };
+
+        var track = function (e) {
+            var rect = vp.getBoundingClientRect();
+            setPos(((e.clientX - rect.left) / rect.width) * 100);
+        };
+
+        vp.addEventListener('pointerdown', function (e) {
+            dragging = true;
+            vp.setPointerCapture(e.pointerId);
+            track(e);
+        });
+        vp.addEventListener('pointermove', function (e) {
+            if (dragging) track(e);
+        });
+        var stop = function () { dragging = false; };
+        vp.addEventListener('pointerup', stop);
+        vp.addEventListener('pointercancel', stop);
+
+        vp.addEventListener('keydown', function (e) {
+            var cur = parseFloat(vp.getAttribute('aria-valuenow')) || 50;
+            if (e.key === 'ArrowLeft') { setPos(cur - 4); e.preventDefault(); }
+            else if (e.key === 'ArrowRight') { setPos(cur + 4); e.preventDefault(); }
+        });
+    });
 })();
